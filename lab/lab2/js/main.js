@@ -127,8 +127,25 @@ var dataset = "https://raw.githubusercontent.com/CPLN692-MUSA611/datasets/master
 var featureGroup;
 
 var myStyle = function(feature) {
-  return {};
-};
+  var day=feature.properties.COLLDAY;
+  var retVal = {};
+  if(day==="MON"){
+    retVal = {fillColor:'red'}
+  }
+  else if (day==="TUE"){
+    retVal = {fillColor:'yellow'}
+  }
+  else if (day==="WED"){
+    retVal = {fillColor:'green'}
+  }
+  else if (day==="THU"){
+      retVal = {fillColor:'blue'}
+  }
+  else{retVal = {fillColor:'purple'}
+  }
+  return retVal
+}
+
 
 var showResults = function() {
   /* =====================
@@ -145,19 +162,50 @@ var showResults = function() {
 
 
 var eachFeatureFunction = function(layer) {
+
   layer.on('click', function (event) {
     /* =====================
     The following code will run every time a layer on the map is clicked.
     Check out layer.feature to see some useful data about the layer that
     you can use in your application.
     ===================== */
-    console.log(layer.feature);
+    // layer.feature.properties.COLLDAY
+    var day = 'unknown'
+    var collday = layer.feature.properties.COLLDAY
+    if (collday==="MON"){
+      day='Monday'
+    }
+    else if (collday === "TUE"){
+      day = "Tuesday"
+    }
+    else if (collday === "WED"){
+      day = "Wednesday"
+    }
+    else if (collday === "THU"){
+      day = "Thursday"
+    }
+    else {
+      day = "Friday"
+    }
+    // console.log(collday)
+    $('.day-of-week').text(day)
+    // console.log(layer.feature)
+    // console.log(event);
     showResults();
   });
 };
 
 var myFilter = function(feature) {
-  return true;
+  var valVal = true
+  var day=feature.properties.COLLDAY
+  console.log(day)
+  if (day == " "){
+    valVal = false
+  }
+  else {
+    valVal = true
+  }
+  return valVal;
 };
 
 $(document).ready(function() {
@@ -167,7 +215,6 @@ $(document).ready(function() {
       style: myStyle,
       filter: myFilter
     }).addTo(map);
-
     // quite similar to _.each
     featureGroup.eachLayer(eachFeatureFunction);
   });
